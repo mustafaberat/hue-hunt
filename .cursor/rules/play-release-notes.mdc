@@ -1,0 +1,18 @@
+---
+description: Play sürüm notları — 6 dil, önceki build’e göre
+alwaysApply: true
+---
+
+# Play sürüm notları
+
+Her Play build / AAB üretiminde `play/whatsnew.txt` yaz. Konu: **önceki Play sürümünden bu yana** kullanıcıya görünen fark. Script/CI/imza yazma.
+
+Diller (sıra sabit): `tr-TR` `en-US` `es-419` `pt-BR` `id` `hi-IN`
+
+```
+<tr-TR>
+madde
+</tr-TR>
+```
+
+Kısa (≤500 karakter / dil). Aynı anlam, altı dil. Sohbette de aynı bloğu ver (Play’e yapıştırılır).

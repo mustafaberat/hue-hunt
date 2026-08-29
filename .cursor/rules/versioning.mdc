@@ -8,7 +8,7 @@ alwaysApply: true
 `pubspec.yaml` → `version: X.Y.Z+CODE`
 `AppIdentity.version` → `'X.Y.Z'` (aynı X.Y.Z, +CODE yok)
 
-Bu Play yüklemesi **v1.0.0** (`1.0.0+1`).
+Son Play yüklemesi **v3.0.0** (`3.0.0+3`). Repo: v3.0.1+3.
 
 | Parça | Ne zaman artar | Sonra |
 |---|---|---|

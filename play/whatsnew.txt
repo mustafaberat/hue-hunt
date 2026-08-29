@@ -1,0 +1,18 @@
+<tr-TR>
+32 bit Android telefonlar yeniden destekleniyor. 64 bit kullanıcılar aynı küçük indirmeyi alır.
+</tr-TR>
+<en-US>
+32-bit Android phones are supported again. 64-bit users still get the same small download.
+</en-US>
+<es-419>
+Los teléfonos Android de 32 bits vuelven a ser compatibles. Quienes usan 64 bits siguen descargando el mismo tamaño reducido.
+</es-419>
+<pt-BR>
+Celulares Android de 32 bits voltaram a ser compatíveis. Quem usa 64 bits continua com o mesmo download pequeno.
+</pt-BR>
+<id>
+Ponsel Android 32-bit didukung lagi. Pengguna 64-bit tetap mendapat unduhan yang sama kecilnya.
+</id>
+<hi-IN>
+32-बिट Android फ़ोन फिर से समर्थित हैं। 64-बिट उपयोगकर्ताओं को वही छोटा डाउनलोड मिलता है।
+</hi-IN>

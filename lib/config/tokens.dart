@@ -20,7 +20,7 @@ abstract final class AppIdentity {
   static const String developer = 'ARU SOFT';
   static const String packageId = 'com.arusoft.huehunt';
   /// pubspec `version` ile aynı X.Y.Z (Play +CODE hariç).
-  static const String version = '1.0.1';
+  static const String version = '3.0.1';
 }
 
 // ---------------------------------------------------------------------------
