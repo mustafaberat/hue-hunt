@@ -1,0 +1,39 @@
+---
+description: Hue Hunt — tek kaynak token, i18n ve yorum kuralları
+alwaysApply: true
+---
+
+# Hue Hunt conventions
+
+## Single source of truth
+
+Tüm sabitler `lib/config/` altındadır. Giriş: `lib/config/app_config.dart`.
+
+- Renk, padding, radius, süre, rota, kimlik → `tokens.dart` (`AppColors`, `AppDimens`, `AppMotion`, `AppType`, `AppRoutes`, `AppIdentity`)
+- Kullanıcı metinleri → `strings.dart` (`AppStringKey`, `AppStrings`, `AppLanguages`)
+- Oyun eşikleri (can, delta, level grid) → `game_config.dart`
+
+```dart
+// ❌ BAD
+padding: const EdgeInsets.all(24)
+color: const Color(0xFF101114)
+Text('Oyna')
+t('play')
+
+// ✅ GOOD
+padding: const EdgeInsets.all(AppDimens.pagePadding)
+color: AppColors.background
+Text(t(AppStringKey.play))
+```
+
+Arka planı değiştirmek = yalnızca `AppColors.backgroundR/G/B`. UI Color, overlay ve OKLab generator aynı kanalları kullanır.
+
+Yeni dil: `AppLanguages.supported` + `AppStrings.translations` içine aynı `AppStringKey` seti.
+
+## Comments
+
+Dosya ve sınıf başında ne işe yaradığını yaz. Magic number, OKLab, game-loop ve "neden böyle" kararlarını satır içi açıkla. Token dosyasındaki her grup yorumlu kalsın.
+
+## Tests
+
+Unit test CI/pipeline zorunluluğu değil. Yeni test ekleme; mevcut `test/` kırılırsa düzelt veya sil.
