@@ -1,7 +1,8 @@
 name: hue_hunt
 description: A minimal color perception puzzle game.
 publish_to: 'none'
-version: 1.0.0+1
+# vX.Y.Z+CODE — X Play yüklemesi, Y stable, Z her commit. Kural: .cursor/rules/versioning.mdc
+version: 1.0.1+1
 
 environment:
   sdk: ^3.7.2

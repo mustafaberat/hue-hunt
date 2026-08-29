@@ -1,0 +1,58 @@
+Hue Hunt — Google Play mağaza metinleri (v1.0.0)
+Paket: com.arusoft.huehunt
+Geliştirici: ARU SOFT
+
+=== Uygulama adı ===
+Hue Hunt
+
+=== Kısa açıklama (80 karakter) ===
+EN: Find the one different color. A quick perception puzzle.
+TR: Farklı rengi bul. Kısa bir renk algısı oyunu.
+
+=== Tam açıklama EN ===
+Hue Hunt is a minimal color perception puzzle.
+
+One box is a slightly different color. Find it before you run out of lives.
+
+• Levels get harder as the grid grows and the color gap shrinks
+• Three lives per run — they do not refill when you level up
+• Color-blind mode picks pairs a red-green color-blind player can tell apart
+• Turkish and English
+• Sound and haptics you can turn off
+• No account, no ads in this version
+
+Made by ARU SOFT.
+
+=== Tam açıklama TR ===
+Hue Hunt, sade bir renk algısı oyunu.
+
+Kutulardan biri biraz farklı renkte. Canın bitmeden onu bul.
+
+• Seviye ilerledikçe ızgara büyür, renk farkı küçülür
+• Turda 3 can — seviye atlamak canı doldurmaz
+• Renk körü modu, kırmızı-yeşil karışmayan çiftler üretir
+• Türkçe ve İngilizce
+• Ses ve titreşim kapatılabilir
+• Hesap yok, bu sürümde reklam yok
+
+ARU SOFT.
+
+=== Kategori ===
+Oyun → Bulmaca (Puzzle)
+
+=== İletişim e-posta ===
+(Play Console'da kendi adresin)
+
+=== Gizlilik politikası URL ===
+Zorunlu. Kendi sayfanı yapıştır (ör. arusoft sitesi).
+Oyun çevrimdışı; ayarlar yalnızca cihazda tutulur.
+
+=== Veri güvenliği ===
+Toplanan veri yok.
+Konum / kişi / fotoğraf yok.
+shared_preferences: dil, ses, titreşim, renk körü — sadece cihazda.
+
+=== Grafikler ===
+Uygulama simgesi: assets/icon/icon.png (512+ px, kare)
+Öne çıkan görsel: play/feature-graphic.png (1024 x 500)
+Telefon ekran görüntüsü: en az 2 adet (sen çekeceksin)

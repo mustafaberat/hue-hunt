@@ -49,3 +49,7 @@ app.*.map.json
 /android/keystore/
 *.keystore
 *.jks
+
+# Play imzalı paketler (yerelde üretilir, git'e girmez)
+*.aab
+*.apk

@@ -1,0 +1,34 @@
+---
+description: Hue Hunt sürüm numarası — vX.Y.Z ve Play versionCode
+alwaysApply: true
+---
+
+# Sürüm: vX.Y.Z
+
+`pubspec.yaml` → `version: X.Y.Z+CODE`
+`AppIdentity.version` → `'X.Y.Z'` (aynı X.Y.Z, +CODE yok)
+
+Bu Play yüklemesi **v1.0.0** (`1.0.0+1`).
+
+| Parça | Ne zaman artar | Sonra |
+|---|---|---|
+| **X** | Google Play’e yeni sürüm yüklenince | Y=0, Z=0, CODE++ |
+| **Y** | Testten geçip stable olunca | Z=0 |
+| **Z** | Her commit’te | — |
+| **CODE** | Yalnızca Play yüklemesinde (`+N`) | Play zorunlu, X ile aynı adım |
+
+```
+# ❌ BAD — commit attın, Z duruyor
+version: 1.0.0+1
+
+# ✅ GOOD — bir sonraki commit
+version: 1.0.1+1
+
+# ✅ GOOD — testten geçti
+version: 1.1.0+1
+
+# ✅ GOOD — ikinci Play yüklemesi
+version: 2.0.0+2
+```
+
+Commit öncesi: Z++ (veya Y/X kuralı), iki dosyayı birlikte güncelle. Tag: `vX.Y.Z`.

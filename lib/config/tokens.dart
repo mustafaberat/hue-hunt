@@ -19,7 +19,8 @@ abstract final class AppIdentity {
   static const String appName = 'Hue Hunt';
   static const String developer = 'ARU SOFT';
   static const String packageId = 'com.arusoft.huehunt';
-  static const String version = '1.0.0';
+  /// pubspec `version` ile aynı X.Y.Z (Play +CODE hariç).
+  static const String version = '1.0.1';
 }
 
 // ---------------------------------------------------------------------------
