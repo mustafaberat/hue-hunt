@@ -44,7 +44,7 @@ Oyun → Bulmaca (Puzzle)
 (Play Console'da kendi adresin)
 
 === Gizlilik politikası URL ===
-Zorunlu. Kendi sayfanı yapıştır (ör. arusoft sitesi).
+https://arusoft.vercel.app/privacy
 Oyun çevrimdışı; ayarlar yalnızca cihazda tutulur.
 
 === Veri güvenliği ===
@@ -54,5 +54,8 @@ shared_preferences: dil, ses, titreşim, renk körü — sadece cihazda.
 
 === Grafikler ===
 Uygulama simgesi: assets/icon/icon.png (512+ px, kare)
-Öne çıkan görsel: play/feature-graphic.png (1024 x 500)
-Telefon ekran görüntüsü: en az 2 adet (sen çekeceksin)
+Özellik grafiği: 1024 x 500 — Play'e yüklendi; yeniden: scripts/generate_game_images.sh
+Telefon: 9:16, 1080x1920, 5 adet (Play'de)
+Tablet: 9:16, 1440x2560 (Play'de)
+PC / Chromebook: 16:9, 1920x1080 (Play'de)
+Video: isteğe bağlı (herkese açık veya liste dışı YouTube, reklam kapalı)

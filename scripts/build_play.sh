@@ -22,9 +22,11 @@ if [ "$aab_ec" -ne 0 ] || [ "$apk_ec" -ne 0 ]; then
 fi
 
 ver=$(awk '/^version:/{print $2; exit}' pubspec.yaml | cut -d+ -f1)
-mkdir -p play
-cp build/app/outputs/bundle/release/app-release.aab "play/hue-hunt-${ver}.aab"
-cp build/app/outputs/flutter-apk/app-release.apk "play/hue-hunt-${ver}.apk"
-echo "AAB: play/hue-hunt-${ver}.aab"
-echo "APK: play/hue-hunt-${ver}.apk"
-open play
+major=${ver%%.*}
+outdir="play/versions/${major}"
+mkdir -p "$outdir"
+cp build/app/outputs/bundle/release/app-release.aab "$outdir/hue-hunt.aab"
+cp build/app/outputs/flutter-apk/app-release.apk "$outdir/hue-hunt.apk"
+echo "AAB: ${outdir}/hue-hunt.aab"
+echo "APK: ${outdir}/hue-hunt.apk"
+open "$outdir"
