@@ -14,7 +14,7 @@ class AppButton extends StatelessWidget {
   });
 
   final String label;
-  final VoidCallback onPressed;
+  final VoidCallback? onPressed;
   final bool primary;
 
   @override
@@ -22,22 +22,25 @@ class AppButton extends StatelessWidget {
     final background = primary ? AppColors.accent : AppColors.surface;
     final foreground = primary ? AppColors.background : AppColors.text;
 
-    return SizedBox(
-      width: double.infinity,
-      height: AppDimens.buttonHeight,
-      child: Material(
-        color: background,
-        borderRadius: BorderRadius.circular(AppDimens.buttonRadius),
-        child: InkWell(
-          onTap: onPressed,
+    return Opacity(
+      opacity: onPressed == null ? AppDimens.disabledOpacity : 1,
+      child: SizedBox(
+        width: double.infinity,
+        height: AppDimens.buttonHeight,
+        child: Material(
+          color: background,
           borderRadius: BorderRadius.circular(AppDimens.buttonRadius),
-          child: Center(
-            child: Text(
-              label.toUpperCase(),
-              style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                    color: foreground,
-                    letterSpacing: AppType.buttonTracking,
-                  ),
+          child: InkWell(
+            onTap: onPressed,
+            borderRadius: BorderRadius.circular(AppDimens.buttonRadius),
+            child: Center(
+              child: Text(
+                label.toUpperCase(),
+                style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                  color: foreground,
+                  letterSpacing: AppType.buttonTracking,
+                ),
+              ),
             ),
           ),
         ),

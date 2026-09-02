@@ -19,8 +19,21 @@ abstract final class AppIdentity {
   static const String appName = 'Hue Hunt';
   static const String developer = 'ARU SOFT';
   static const String packageId = 'com.arusoft.huehunt';
+
   /// pubspec `version` ile aynı X.Y.Z (Play +CODE hariç).
-  static const String version = '3.0.2';
+  static const String version = '3.0.3';
+
+  /// Top-5 skorboard. GET/POST [scoresUrl].
+  static const String scoresUrl =
+      'https://arusoft.vercel.app/api/hue-hunt/scores';
+}
+
+/// API JSON anahtarları. Site `Score.json` ile aynı (name / level / scores).
+abstract final class ScoreJson {
+  static const String scores = 'scores';
+  static const String name = 'name';
+  static const String level = 'level';
+  static const String accepted = 'accepted';
 }
 
 // ---------------------------------------------------------------------------
@@ -154,6 +167,9 @@ abstract final class AppDimens {
   static const double minTouchTarget = 44;
   static const double headerHeight = 48;
   static const double buttonHeight = 56;
+
+  /// [AppButton] `onPressed == null` iken.
+  static const double disabledOpacity = 0.45;
   static const double languageChipHeight = 48;
   static const double buttonRadius = 18;
   static const double languageChipRadius = 14;
@@ -221,6 +237,9 @@ abstract final class AppMotion {
   static const Duration wrongFeedback = Duration(milliseconds: 160);
   static const Duration correctFeedback = Duration(milliseconds: 180);
   static const Duration gameOverReveal = Duration(milliseconds: 700);
+
+  /// Son can kalınca başlayan skorboard GET; overlay bunu bekler.
+  static const Duration scoresFetchTimeout = Duration(seconds: 8);
 
   /// Doğru kutunun kısa parlaması; ardından [gridRebirth] başlar.
   static const Duration levelAdvanceDelay = Duration(milliseconds: 80);

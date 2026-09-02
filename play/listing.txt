@@ -19,6 +19,7 @@ One box is a slightly different color. Find it before you run out of lives.
 • Color-blind mode picks pairs a red-green color-blind player can tell apart
 • Turkish and English
 • Sound and haptics you can turn off
+• Optional scoreboard: nickname and the level you reached
 • No account, no ads in this version
 
 Made by ARU SOFT.
@@ -33,6 +34,7 @@ Kutulardan biri biraz farklı renkte. Canın bitmeden onu bul.
 • Renk körü modu, kırmızı-yeşil karışmayan çiftler üretir
 • Türkçe ve İngilizce
 • Ses ve titreşim kapatılabilir
+• İsteğe bağlı skorboard: isim ve ulaşılan seviye
 • Hesap yok, bu sürümde reklam yok
 
 ARU SOFT.
@@ -45,10 +47,10 @@ Oyun → Bulmaca (Puzzle)
 
 === Gizlilik politikası URL ===
 https://arusoft.vercel.app/privacy
-Oyun çevrimdışı; ayarlar yalnızca cihazda tutulur.
+Oyun çevrimdışı oynanır; skorboard için ağ gerekir. Ayarlar cihazda.
 
 === Veri güvenliği ===
-Toplanan veri yok.
+Skorboard (isteğe bağlı): takma ad + ulaşılan seviye → arusoft.vercel.app/api
 Konum / kişi / fotoğraf yok.
 shared_preferences: dil, ses, titreşim, renk körü — sadece cihazda.
 
