@@ -37,6 +37,10 @@ abstract final class AppStringKey {
   static const String level = 'level';
   static const String turkish = 'turkish';
   static const String english = 'english';
+  static const String scoreboard = 'scoreboard';
+  static const String yourName = 'yourName';
+  static const String saveScore = 'saveScore';
+  static const String scoreboardEmpty = 'scoreboardEmpty';
 
   /// Dil kodu → o dilin kendi adının çeviri anahtarı.
   static const Map<String, String> languageNameKeys = {
@@ -69,6 +73,10 @@ abstract final class AppStrings {
       AppStringKey.level: 'Seviye',
       AppStringKey.turkish: 'Türkçe',
       AppStringKey.english: 'English',
+      AppStringKey.scoreboard: 'Skor tablosu',
+      AppStringKey.yourName: 'İsmin',
+      AppStringKey.saveScore: 'Kaydet',
+      AppStringKey.scoreboardEmpty: 'Henüz skor yok',
     },
     AppLanguages.en: {
       AppStringKey.appName: AppIdentity.appName,
@@ -92,6 +100,10 @@ abstract final class AppStrings {
       AppStringKey.level: 'Level',
       AppStringKey.turkish: 'Türkçe',
       AppStringKey.english: 'English',
+      AppStringKey.scoreboard: 'Scoreboard',
+      AppStringKey.yourName: 'Your name',
+      AppStringKey.saveScore: 'Save',
+      AppStringKey.scoreboardEmpty: 'No scores yet',
     },
   };
 

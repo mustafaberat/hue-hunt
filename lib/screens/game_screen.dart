@@ -1,20 +1,23 @@
 /// Oyun turu. Engine saf; bu dosya gecikme, overlay ve feedback çalar.
 ///
 /// Doğru seçimde kısa parlama, sonra next level + grid rebirth (can aynı).
-/// Can 0'da doğru kutu gösterilir, ardından Game Over kartı açılır.
+/// Yanlışta can 1 veya Game Over ise skorboard prefetch. Ağ yoksa tablo yok.
 library;
+
+import 'dart:async';
 
 import 'package:flutter/material.dart';
 
 import '../app_scope.dart';
-import '../components/app_button.dart';
 import '../components/game_grid.dart';
+import '../components/game_over_overlay.dart';
 import '../components/hearts.dart';
 import '../components/level_indicator.dart';
 import '../config/app_config.dart';
 import '../feedback/player_feedback.dart';
 import '../game/game_engine.dart';
 import '../game/game_state.dart';
+import '../scoreboard/scoreboard_session.dart';
 
 class GameScreen extends StatefulWidget {
   const GameScreen({super.key});
@@ -25,9 +28,10 @@ class GameScreen extends StatefulWidget {
 
 class _GameScreenState extends State<GameScreen> {
   late final GameEngine _engine;
+  final _scoreboard = ScoreboardSession();
   late GameState _state;
-  bool _started = false;
-  bool _showGameOver = false;
+  var _started = false;
+  var _showGameOver = false;
 
   /// Doğru kutunun kısa "success" animasyonu bitene kadar input kilitli.
   int? _successIndex;
@@ -36,6 +40,12 @@ class _GameScreenState extends State<GameScreen> {
   void initState() {
     super.initState();
     _engine = GameEngine();
+  }
+
+  @override
+  void dispose() {
+    _scoreboard.dispose();
+    super.dispose();
   }
 
   @override
@@ -57,38 +67,53 @@ class _GameScreenState extends State<GameScreen> {
     }
 
     final result = _engine.selectBox(_state, index);
-    final scope = AppScope.of(context);
-
     if (result.outcome == SelectionOutcome.ignored) {
       return;
     }
 
+    final scope = AppScope.of(context);
     PlayerFeedback.play(
       correct: result.outcome == SelectionOutcome.correct,
       sound: scope.soundEnabled,
       haptic: scope.hapticEnabled,
     );
 
-    if (result.outcome == SelectionOutcome.correct) {
-      setState(() {
-        _state = result.state;
-        _successIndex = index;
-      });
-      Future<void>.delayed(AppMotion.levelAdvanceDelay, () {
-        if (!mounted) {
-          return;
-        }
-        setState(() {
-          _state = _engine.nextLevel(_state);
-          _successIndex = null;
-        });
-      });
-      return;
+    switch (result.outcome) {
+      case SelectionOutcome.correct:
+        _onCorrect(index, result.state);
+      case SelectionOutcome.wrong:
+      case SelectionOutcome.gameOver:
+        _onMiss(result);
+      case SelectionOutcome.ignored:
+        break;
     }
+  }
 
+  void _onCorrect(int index, GameState state) {
+    setState(() {
+      _state = state;
+      _successIndex = index;
+    });
+    Future<void>.delayed(AppMotion.levelAdvanceDelay, () {
+      if (!mounted) {
+        return;
+      }
+      setState(() {
+        _state = _engine.nextLevel(_state);
+        _successIndex = null;
+      });
+    });
+  }
+
+  void _onMiss(SelectionResult result) {
     setState(() => _state = result.state);
 
-    if (result.outcome == SelectionOutcome.gameOver) {
+    final lastLife = result.state.lives == 1;
+    final over = result.outcome == SelectionOutcome.gameOver;
+    if (lastLife || over) {
+      unawaited(_scoreboard.prefetch());
+    }
+    if (over) {
       Future<void>.delayed(AppMotion.gameOverReveal, () {
         if (!mounted) {
           return;
@@ -99,6 +124,7 @@ class _GameScreenState extends State<GameScreen> {
   }
 
   void _playAgain() {
+    _scoreboard.reset();
     setState(() {
       _state = _engine.restart();
       _showGameOver = false;
@@ -168,87 +194,13 @@ class _GameScreenState extends State<GameScreen> {
                 ],
               ),
               if (_showGameOver)
-                _GameOverOverlay(
+                GameOverOverlay(
                   level: _state.level,
+                  scoreboard: _scoreboard,
                   onPlayAgain: _playAgain,
                   onHome: () => Navigator.pop(context),
                 ),
             ],
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class _GameOverOverlay extends StatelessWidget {
-  const _GameOverOverlay({
-    required this.level,
-    required this.onPlayAgain,
-    required this.onHome,
-  });
-
-  final int level;
-  final VoidCallback onPlayAgain;
-  final VoidCallback onHome;
-
-  @override
-  Widget build(BuildContext context) {
-    final t = AppScope.of(context).t;
-
-    return ColoredBox(
-      color: AppColors.overlay,
-      child: Center(
-        child: ConstrainedBox(
-          constraints: const BoxConstraints(
-            maxWidth: AppDimens.overlayMaxWidth,
-          ),
-          child: Padding(
-            padding: const EdgeInsets.symmetric(
-              horizontal: AppDimens.overlayInset,
-            ),
-            child: DecoratedBox(
-              decoration: BoxDecoration(
-                color: AppColors.surface,
-                borderRadius: BorderRadius.circular(AppDimens.cardRadius),
-              ),
-              child: Padding(
-                padding: const EdgeInsets.fromLTRB(
-                  AppDimens.overlayInner,
-                  AppDimens.overlayInnerTop,
-                  AppDimens.overlayInner,
-                  AppDimens.overlayInner,
-                ),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Text(
-                      t(AppStringKey.gameOver).toUpperCase(),
-                      textAlign: TextAlign.center,
-                      style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                        letterSpacing: AppType.overlayTracking,
-                      ),
-                    ),
-                    const SizedBox(height: AppDimens.spaceMedium),
-                    Text(
-                      '${t(AppStringKey.reachedLevel)} $level',
-                      style: Theme.of(context).textTheme.bodyMedium,
-                    ),
-                    const SizedBox(height: AppDimens.spaceXLarge),
-                    AppButton(
-                      label: t(AppStringKey.playAgain),
-                      onPressed: onPlayAgain,
-                    ),
-                    const SizedBox(height: AppDimens.spaceMedium),
-                    AppButton(
-                      label: t(AppStringKey.home),
-                      primary: false,
-                      onPressed: onHome,
-                    ),
-                  ],
-                ),
-              ),
-            ),
           ),
         ),
       ),

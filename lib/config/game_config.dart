@@ -85,6 +85,18 @@ abstract final class GameConfig {
   static const Duration correctFeedback = AppMotion.correctFeedback;
   static const Duration gameOverReveal = AppMotion.gameOverReveal;
 
+  /// Genel top-5. Yalnızca 5. sıradan yüksek level yazılır.
+  static const int scoreboardSize = 5;
+  static const int scoreNameMin = 2;
+  static const int scoreNameMax = 16;
+  static const int scoreLevelMax = 999;
+
+  /// Site `NAME_OK` ile aynı: harf, rakam, boşluk, `_ . -`.
+  static final RegExp scoreNameOk = RegExp(
+    r'^[\p{L}\p{N} _.-]+$',
+    unicode: true,
+  );
+
   /// Level → kare grid. Dış oyun alanı sabit, kutu küçülür. Tavan 6×6.
   static const List<LevelSpec> levelSpecs = [
     LevelSpec(level: 1, grid: 2, delta: 0.18),
