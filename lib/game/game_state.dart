@@ -16,6 +16,10 @@ class GameState {
     required this.differentIndex,
     required this.status,
     this.wrongIndexes = const {},
+    this.correctCount = 0,
+    this.wrongCount = 0,
+    this.currentStreak = 0,
+    this.bestStreak = 0,
   });
 
   final int level;
@@ -31,6 +35,15 @@ class GameState {
 
   /// Bu round'da yanlış basılan kutular. Aynı kutuya tekrar basmak can yakmaz.
   final Set<int> wrongIndexes;
+  final int correctCount;
+  final int wrongCount;
+  final int currentStreak;
+  final int bestStreak;
+
+  int get totalAttempts => correctCount + wrongCount;
+
+  double get accuracy =>
+      totalAttempts == 0 ? 0 : correctCount / totalAttempts;
 
   int get boxCount => columns * rows;
 
@@ -49,6 +62,10 @@ class GameState {
     int? differentIndex,
     GameStatus? status,
     Set<int>? wrongIndexes,
+    int? correctCount,
+    int? wrongCount,
+    int? currentStreak,
+    int? bestStreak,
   }) {
     return GameState(
       level: level ?? this.level,
@@ -60,6 +77,10 @@ class GameState {
       differentIndex: differentIndex ?? this.differentIndex,
       status: status ?? this.status,
       wrongIndexes: wrongIndexes ?? this.wrongIndexes,
+      correctCount: correctCount ?? this.correctCount,
+      wrongCount: wrongCount ?? this.wrongCount,
+      currentStreak: currentStreak ?? this.currentStreak,
+      bestStreak: bestStreak ?? this.bestStreak,
     );
   }
 }

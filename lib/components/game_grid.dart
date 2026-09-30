@@ -8,9 +8,11 @@ import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 
+import '../app_scope.dart';
 import '../animation/grid_rebirth.dart';
 import '../color/rgb.dart';
 import '../config/app_config.dart';
+import '../settings/tile_shape.dart';
 import 'color_box.dart';
 
 class GameGrid extends StatefulWidget {
@@ -25,6 +27,7 @@ class GameGrid extends StatefulWidget {
     required this.enabled,
     this.revealed = false,
     this.successIndex,
+    this.tileShape = TileShape.square,
     super.key,
   });
 
@@ -38,6 +41,7 @@ class GameGrid extends StatefulWidget {
   final bool enabled;
   final bool revealed;
   final int? successIndex;
+  final TileShape tileShape;
 
   @override
   State<GameGrid> createState() => _GameGridState();
@@ -93,8 +97,9 @@ class _GameGridState extends State<GameGrid> {
   Widget build(BuildContext context) {
     return LayoutBuilder(
       builder: (context, constraints) {
-        final gap = AppDimens.boxGap;
         final boardSide = math.min(constraints.maxWidth, constraints.maxHeight);
+        final gap = _gapFor(boardSide);
+        final translate = AppScope.of(context).t;
 
         return Center(
           child: SizedBox(
@@ -110,6 +115,7 @@ class _GameGridState extends State<GameGrid> {
                   toN: widget.columns,
                   board: boardSide,
                   gap: gap,
+                  tileShape: widget.tileShape,
                 );
                 return Stack(
                   clipBehavior: Clip.hardEdge,
@@ -131,6 +137,13 @@ class _GameGridState extends State<GameGrid> {
                                   pose.outgoing
                                       ? BoxFeedback.none
                                       : _feedbackFor(pose.index),
+                              shape: widget.tileShape,
+                              semanticLabel: translate(
+                                AppStringKey.gameTile,
+                              ).replaceAll(
+                                '{index}',
+                                '${pose.index + 1}',
+                              ),
                               enabled:
                                   widget.enabled &&
                                   !animating &&
@@ -148,6 +161,17 @@ class _GameGridState extends State<GameGrid> {
         );
       },
     );
+  }
+
+  double _gapFor(double boardSide) {
+    if (widget.tileShape == TileShape.hexagon || widget.columns <= 1) {
+      return 0;
+    }
+
+    final gapForMinimumTarget =
+        (boardSide - widget.columns * AppDimens.minTouchTarget) /
+        (widget.columns - 1);
+    return math.min(AppDimens.boxGap, math.max(0, gapForMinimumTarget));
   }
 
   Color _colorAt(GridCellPose pose) {
