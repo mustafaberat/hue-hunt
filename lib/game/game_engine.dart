@@ -48,7 +48,15 @@ class GameEngine {
 
     if (index == state.differentIndex) {
       return SelectionResult(
-        state.copyWith(status: GameStatus.success),
+        state.copyWith(
+          status: GameStatus.success,
+          correctCount: state.correctCount + 1,
+          currentStreak: state.currentStreak + 1,
+          bestStreak: max(
+            state.bestStreak,
+            state.currentStreak + 1,
+          ),
+        ),
         SelectionOutcome.correct,
       );
     }
@@ -60,6 +68,8 @@ class GameEngine {
           lives: 0,
           status: GameStatus.gameOver,
           wrongIndexes: {...state.wrongIndexes, index},
+          wrongCount: state.wrongCount + 1,
+          currentStreak: 0,
         ),
         SelectionOutcome.gameOver,
       );
@@ -70,16 +80,32 @@ class GameEngine {
         lives: lives,
         status: GameStatus.playing,
         wrongIndexes: {...state.wrongIndexes, index},
+        wrongCount: state.wrongCount + 1,
+        currentStreak: 0,
       ),
       SelectionOutcome.wrong,
     );
   }
 
   GameState nextLevel(GameState state) {
-    return _roundFor(state.level + 1, lives: state.lives);
+    return _roundFor(
+      state.level + 1,
+      lives: state.lives,
+      correctCount: state.correctCount,
+      wrongCount: state.wrongCount,
+      currentStreak: state.currentStreak,
+      bestStreak: state.bestStreak,
+    );
   }
 
-  GameState _roundFor(int level, {required int lives}) {
+  GameState _roundFor(
+    int level, {
+    required int lives,
+    int correctCount = 0,
+    int wrongCount = 0,
+    int currentStreak = 0,
+    int bestStreak = 0,
+  }) {
     _generator.colorBlindSafe = colorBlindSafe;
     final spec = GameConfig.specForLevel(level);
     final colors = _generator.generateRoundColors(spec.delta);
@@ -94,6 +120,10 @@ class GameEngine {
       differentColor: colors.different,
       differentIndex: index,
       status: GameStatus.playing,
+      correctCount: correctCount,
+      wrongCount: wrongCount,
+      currentStreak: currentStreak,
+      bestStreak: bestStreak,
     );
   }
 

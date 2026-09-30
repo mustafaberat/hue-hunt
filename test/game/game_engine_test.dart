@@ -35,6 +35,8 @@ void main() {
     expect(result.state.baseColor, before.baseColor);
     expect(result.state.status, GameStatus.playing);
     expect(result.state.wrongIndexes, contains(wrong));
+    expect(result.state.wrongCount, 1);
+    expect(result.state.currentStreak, 0);
   });
 
   test('tapping the same wrong box twice does not remove another life', () {
@@ -43,6 +45,21 @@ void main() {
     final result = engine.selectBox(state, wrong);
     expect(result.outcome, SelectionOutcome.ignored);
     expect(result.state.lives, GameConfig.initialLives - 1);
+    expect(result.state.wrongCount, 1);
+    expect(result.state.currentStreak, 0);
+  });
+
+  test('tracks accuracy and best streak across levels', () {
+    var current = state;
+    current = engine.selectBox(current, current.differentIndex).state;
+    current = engine.nextLevel(current);
+    current = engine.selectBox(current, current.differentIndex).state;
+
+    expect(current.correctCount, 2);
+    expect(current.wrongCount, 0);
+    expect(current.currentStreak, 2);
+    expect(current.bestStreak, 2);
+    expect(current.accuracy, 1);
   });
 
   test('correct answer advances level without restoring lives', () {
