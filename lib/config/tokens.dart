@@ -44,14 +44,18 @@ abstract final class AppRoutes {
   static const String home = '/';
   static const String game = '/game';
   static const String settings = '/settings';
+  static const String scoreboard = '/scoreboard';
 }
 
 /// SharedPreferences anahtarları. Metin içeriği değil, depolama id'si.
 abstract final class AppPrefsKeys {
   static const String language = 'language';
+  static const String gameIntroSeen = 'game_intro_seen';
+  static const String bestLevel = 'best_level';
   static const String colorBlindMode = 'color_blind_mode';
   static const String sound = 'sound';
   static const String haptic = 'haptic';
+  static const String tileShape = 'tile_shape';
 }
 
 // ---------------------------------------------------------------------------
@@ -154,6 +158,7 @@ abstract final class AppDimens {
   static const double overlayInset = 8;
   static const double overlayInnerTop = 32;
   static const double overlayInner = 24;
+  static const double gameOverCardOffset = 22;
 
   static const double spaceTiny = 3;
   static const double spaceXXSmall = 4;
@@ -167,6 +172,8 @@ abstract final class AppDimens {
   static const double minTouchTarget = 44;
   static const double headerHeight = 48;
   static const double buttonHeight = 56;
+  static const double buttonLoader = 20;
+  static const double scoreRowOffset = 18;
 
   /// [AppButton] `onPressed == null` iken.
   static const double disabledOpacity = 0.45;
@@ -196,6 +203,7 @@ abstract final class AppDimens {
   static const double iconSection = 20;
   static const double iconHeart = 22;
   static const double iconClose = 24;
+  static const double gameOverIcon = 34;
 
   static const int homeTopFlex = 3;
   static const int homeMidFlex = 3;
@@ -213,6 +221,7 @@ abstract final class AppType {
   static const double bodyMuted = 15;
   static const double tagline = 17;
   static const double button = 18;
+  static const double gameOverTitle = 26;
 
   static const double displayHeight = 1.05;
   static const double displayTracking = 4;
@@ -236,7 +245,13 @@ abstract final class AppType {
 abstract final class AppMotion {
   static const Duration wrongFeedback = Duration(milliseconds: 160);
   static const Duration correctFeedback = Duration(milliseconds: 180);
+  static const Duration heartChange = Duration(milliseconds: 260);
+  static const Duration levelChange = Duration(milliseconds: 240);
   static const Duration gameOverReveal = Duration(milliseconds: 700);
+  static const Duration gameOverCardReveal = Duration(milliseconds: 420);
+  static const Duration homeReveal = Duration(milliseconds: 520);
+  static const Duration streakFeedback = Duration(milliseconds: 320);
+  static const Duration streakVisible = Duration(milliseconds: 1200);
 
   /// Son can kalınca başlayan skorboard GET; overlay bunu bekler.
   static const Duration scoresFetchTimeout = Duration(seconds: 8);
@@ -246,6 +261,8 @@ abstract final class AppMotion {
 
   /// Her seviye atlayışında kutular söner, yeniden doğar, yerine hizalanır.
   static const Duration gridRebirth = Duration(milliseconds: 240);
+  static const Duration scoreRowReveal = Duration(milliseconds: 360);
+  static const Duration scoreRowHighlight = Duration(milliseconds: 700);
   static const Cubic gridRebirthCurve = Cubic(0.2, 0.0, 0.0, 1.0);
 
   /// 0–split eski grid söner; split–1 yeni grid doğar.

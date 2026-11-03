@@ -10,12 +10,14 @@ class AppButton extends StatelessWidget {
     required this.label,
     required this.onPressed,
     this.primary = true,
+    this.busy = false,
     super.key,
   });
 
   final String label;
   final VoidCallback? onPressed;
   final bool primary;
+  final bool busy;
 
   @override
   Widget build(BuildContext context) {
@@ -34,13 +36,21 @@ class AppButton extends StatelessWidget {
             onTap: onPressed,
             borderRadius: BorderRadius.circular(AppDimens.buttonRadius),
             child: Center(
-              child: Text(
-                label.toUpperCase(),
-                style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                  color: foreground,
-                  letterSpacing: AppType.buttonTracking,
-                ),
-              ),
+              child: busy
+                  ? SizedBox.square(
+                      dimension: AppDimens.buttonLoader,
+                      child: CircularProgressIndicator(
+                        strokeWidth: 2,
+                        color: foreground,
+                      ),
+                    )
+                  : Text(
+                      label.toUpperCase(),
+                      style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                        color: foreground,
+                        letterSpacing: AppType.buttonTracking,
+                      ),
+                    ),
             ),
           ),
         ),

@@ -10,9 +10,11 @@ import 'package:flutter/material.dart';
 
 import '../app_scope.dart';
 import '../components/game_grid.dart';
+import '../components/game_intro_overlay.dart';
 import '../components/game_over_overlay.dart';
 import '../components/hearts.dart';
 import '../components/level_indicator.dart';
+import '../components/streak_overlay.dart';
 import '../config/app_config.dart';
 import '../feedback/player_feedback.dart';
 import '../game/game_engine.dart';
@@ -31,7 +33,10 @@ class _GameScreenState extends State<GameScreen> {
   final _scoreboard = ScoreboardSession();
   late GameState _state;
   var _started = false;
+  var _showIntro = false;
   var _showGameOver = false;
+  var _bestBeforeGame = 0;
+  int? _streakValue;
 
   /// Doğru kutunun kısa "success" animasyonu bitene kadar input kilitli.
   int? _successIndex;
@@ -53,13 +58,20 @@ class _GameScreenState extends State<GameScreen> {
     super.didChangeDependencies();
     _engine.colorBlindSafe = AppScope.of(context).colorBlindMode;
     if (!_started) {
+      _bestBeforeGame = AppScope.of(context).settings.bestLevel;
       _state = _engine.start();
       _started = true;
+      _showIntro = !AppScope.of(context).settings.gameIntroSeen;
     }
   }
 
   bool get _inputEnabled =>
-      _state.acceptsInput && !_showGameOver && _successIndex == null;
+      _state.acceptsInput && !_showIntro && !_showGameOver && _successIndex == null;
+
+  void _startGame() {
+    AppScope.of(context).settings.setGameIntroSeen();
+    setState(() => _showIntro = false);
+  }
 
   void _onSelect(int index) {
     if (!_inputEnabled) {
@@ -93,7 +105,19 @@ class _GameScreenState extends State<GameScreen> {
     setState(() {
       _state = state;
       _successIndex = index;
+      _streakValue =
+          state.currentStreak >= 3 && state.currentStreak % 3 == 0
+              ? state.currentStreak
+              : null;
     });
+    if (state.currentStreak >= 3 && state.currentStreak % 3 == 0) {
+      Future<void>.delayed(AppMotion.streakVisible, () {
+        if (!mounted || _streakValue != state.currentStreak) {
+          return;
+        }
+        setState(() => _streakValue = null);
+      });
+    }
     Future<void>.delayed(AppMotion.levelAdvanceDelay, () {
       if (!mounted) {
         return;
@@ -118,6 +142,7 @@ class _GameScreenState extends State<GameScreen> {
         if (!mounted) {
           return;
         }
+        unawaited(AppScope.of(context).settings.recordBestLevel(_state.level));
         setState(() => _showGameOver = true);
       });
     }
@@ -126,9 +151,11 @@ class _GameScreenState extends State<GameScreen> {
   void _playAgain() {
     _scoreboard.reset();
     setState(() {
+      _bestBeforeGame = AppScope.of(context).settings.bestLevel;
       _state = _engine.restart();
       _showGameOver = false;
       _successIndex = null;
+      _streakValue = null;
     });
   }
 
@@ -188,6 +215,7 @@ class _GameScreenState extends State<GameScreen> {
                       enabled: _inputEnabled,
                       revealed: _state.status == GameStatus.gameOver,
                       successIndex: _successIndex,
+                      tileShape: scope.tileShape,
                       onSelect: _onSelect,
                     ),
                   ),
@@ -196,9 +224,30 @@ class _GameScreenState extends State<GameScreen> {
               if (_showGameOver)
                 GameOverOverlay(
                   level: _state.level,
+                  bestLevel: scope.settings.bestLevel,
+                  previousBestLevel: _bestBeforeGame,
+                  correctCount: _state.correctCount,
+                  wrongCount: _state.wrongCount,
+                  accuracy: _state.accuracy,
+                  bestStreak: _state.bestStreak,
                   scoreboard: _scoreboard,
                   onPlayAgain: _playAgain,
                   onHome: () => Navigator.pop(context),
+                ),
+              if (_showIntro) GameIntroOverlay(onStart: _startGame),
+              Positioned.fill(
+                child: AnimatedSwitcher(
+                  duration: AppMotion.streakFeedback,
+                  child:
+                      _streakValue == null
+                          ? const SizedBox.shrink(key: ValueKey('no-streak'))
+                          : StreakOverlay(
+                            key: ValueKey(_streakValue),
+                            message: scope
+                                .t(AppStringKey.streakMessage)
+                                .replaceAll('{count}', '$_streakValue'),
+                          ),
+                ),
                 ),
             ],
           ),

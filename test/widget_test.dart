@@ -15,6 +15,12 @@ void main() {
 
     expect(find.byType(ColorBox), findsNWidgets(4));
     expect(find.textContaining('Level'), findsOneWidget);
+    expect(find.text('Find the different one'), findsOneWidget);
+
+    await tester.tap(find.text('GOT IT, START'));
+    await tester.pumpAndSettle();
+
+    expect(find.text('Find the different one'), findsNothing);
   });
 
   testWidgets('settings can switch language', (tester) async {

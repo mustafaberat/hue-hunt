@@ -12,6 +12,7 @@ import 'config/app_config.dart';
 import 'screens/game_screen.dart';
 import 'screens/home_screen.dart';
 import 'screens/settings_screen.dart';
+import 'screens/scoreboard_screen.dart';
 import 'settings/settings_store.dart';
 
 class HueHuntApp extends StatelessWidget {
@@ -41,6 +42,7 @@ class HueHuntApp extends StatelessWidget {
         AppRoutes.home: (_) => const HomeScreen(),
         AppRoutes.game: (_) => const GameScreen(),
         AppRoutes.settings: (_) => const SettingsScreen(),
+        AppRoutes.scoreboard: (_) => const ScoreboardScreen(),
       },
     );
   }

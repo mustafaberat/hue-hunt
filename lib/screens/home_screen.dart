@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 
 import '../app_scope.dart';
 import '../components/app_button.dart';
+import '../components/app_bottom_nav.dart';
 import '../components/app_logo.dart';
 import '../config/app_config.dart';
 
@@ -16,73 +17,63 @@ class HomeScreen extends StatelessWidget {
     final t = AppScope.of(context).t;
 
     return Scaffold(
-      body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(
-            horizontal: AppDimens.pagePadding,
-            vertical: AppDimens.pagePaddingTight,
+      body: DecoratedBox(
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            colors: [Color(0xFF151923), AppColors.background],
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
           ),
-          child: Column(
-            children: [
-              const Spacer(flex: AppDimens.homeTopFlex),
-              const AppLogo(),
-              const SizedBox(height: AppDimens.spaceXLarge),
-              FittedBox(
-                fit: BoxFit.scaleDown,
-                child: Text(
-                  t(AppStringKey.appName).toUpperCase(),
-                  textAlign: TextAlign.center,
-                  style: Theme.of(context).textTheme.displayLarge,
+        ),
+        child: SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(
+              horizontal: AppDimens.pagePadding,
+              vertical: AppDimens.pagePaddingTight,
+            ),
+            child: Column(
+              children: [
+                const Spacer(flex: AppDimens.homeTopFlex),
+                TweenAnimationBuilder<double>(
+                  tween: Tween(begin: 0.86, end: 1),
+                  duration: AppMotion.homeReveal,
+                  curve: Curves.easeOutBack,
+                  builder:
+                      (context, value, child) => Opacity(
+                        opacity: value.clamp(0, 1),
+                        child: Transform.scale(scale: value, child: child),
+                      ),
+                  child: const AppLogo(),
                 ),
-              ),
-              const SizedBox(height: AppDimens.spaceMedium),
-              Text(
-                t(AppStringKey.tagline),
-                textAlign: TextAlign.center,
-                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                      fontSize: AppType.tagline,
-                    ),
-              ),
-              const Spacer(flex: AppDimens.homeMidFlex),
-              AppButton(
-                label: t(AppStringKey.play),
-                onPressed: () => Navigator.pushNamed(context, AppRoutes.game),
-              ),
-              const SizedBox(height: AppDimens.spaceRegular),
-              TextButton(
-                onPressed: () =>
-                    Navigator.pushNamed(context, AppRoutes.settings),
-                style: TextButton.styleFrom(
-                  foregroundColor: AppColors.textMuted,
-                  minimumSize: const Size(
-                    AppDimens.minTouchTarget,
-                    AppDimens.minTouchTarget,
+                const SizedBox(height: AppDimens.spaceXLarge),
+                FittedBox(
+                  fit: BoxFit.scaleDown,
+                  child: Text(
+                    t(AppStringKey.appName).toUpperCase(),
+                    textAlign: TextAlign.center,
+                    style: Theme.of(context).textTheme.displayLarge,
                   ),
                 ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    const Icon(
-                      Icons.settings_rounded,
-                      size: AppDimens.iconSettings,
-                    ),
-                    const SizedBox(width: AppDimens.spaceXSmall),
-                    Text(
-                      t(AppStringKey.settings),
-                      style: const TextStyle(
-                        fontWeight: AppType.settingsLinkWeight,
-                        letterSpacing: AppType.settingsLinkTracking,
-                      ),
-                    ),
-                  ],
+                const SizedBox(height: AppDimens.spaceMedium),
+                Text(
+                  t(AppStringKey.tagline),
+                  textAlign: TextAlign.center,
+                  style: Theme.of(
+                    context,
+                  ).textTheme.bodyMedium?.copyWith(fontSize: AppType.tagline),
                 ),
-              ),
-              const Spacer(flex: AppDimens.homeBottomFlex),
-            ],
+                const Spacer(flex: AppDimens.homeMidFlex),
+                AppButton(
+                  label: t(AppStringKey.play),
+                  onPressed: () => Navigator.pushNamed(context, AppRoutes.game),
+                ),
+                const Spacer(flex: AppDimens.homeBottomFlex),
+              ],
+            ),
           ),
         ),
       ),
+      bottomNavigationBar: const AppBottomNav(selectedIndex: 0),
     );
   }
 }

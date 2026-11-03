@@ -6,6 +6,7 @@ library;
 import 'package:flutter/material.dart';
 
 import '../config/app_config.dart';
+import '../settings/tile_shape.dart';
 
 /// Bir hücrenin o karedeki konumu ve görünürlüğü.
 class GridCellPose {
@@ -48,23 +49,29 @@ abstract final class GridRebirthMath {
     required int toN,
     required double board,
     required double gap,
+    TileShape tileShape = TileShape.square,
   }) {
     if (t >= 1) {
-      return _settled(toN, board, gap);
+      return _settled(toN, board, gap, tileShape);
     }
     if (t <= 0) {
-      return _outgoing(fromN, board, gap, 0);
+      return _outgoing(fromN, board, gap, 0, tileShape);
     }
 
     final split = AppMotion.gridRebirthSplit;
     if (t < split) {
-      return _outgoing(fromN, board, gap, t / split);
+      return _outgoing(fromN, board, gap, t / split, tileShape);
     }
-    return _incoming(toN, board, gap, (t - split) / (1 - split));
+    return _incoming(toN, board, gap, (t - split) / (1 - split), tileShape);
   }
 
-  static List<GridCellPose> _settled(int n, double board, double gap) {
-    return _incoming(n, board, gap, 1);
+  static List<GridCellPose> _settled(
+    int n,
+    double board,
+    double gap,
+    TileShape tileShape,
+  ) {
+    return _incoming(n, board, gap, 1, tileShape);
   }
 
   static List<GridCellPose> _outgoing(
@@ -72,8 +79,11 @@ abstract final class GridRebirthMath {
     double board,
     double gap,
     double u,
+    TileShape tileShape,
   ) {
-    final cell = cellSize(n, board, gap);
+    final cell = tileShape == TileShape.hexagon
+        ? _hexCellSize(n, board)
+        : cellSize(n, board, gap);
     final scale = 1 + (AppMotion.gridRebirthOutScale - 1) * u;
     final opacity = (1 - u).clamp(0.0, 1.0);
     final poses = <GridCellPose>[];
@@ -85,8 +95,8 @@ abstract final class GridRebirthMath {
             row: row,
             col: col,
             index: row * n + col,
-            x: col * (cell + gap),
-            y: row * (cell + gap),
+            x: _xFor(col, n, cell, board, gap, tileShape),
+            y: _yFor(row, col, n, cell, board, gap, tileShape),
             size: cell,
             opacity: opacity,
             scale: scale,
@@ -103,8 +113,11 @@ abstract final class GridRebirthMath {
     double board,
     double gap,
     double u,
+    TileShape tileShape,
   ) {
-    final cell = cellSize(n, board, gap);
+    final cell = tileShape == TileShape.hexagon
+        ? _hexCellSize(n, board)
+        : cellSize(n, board, gap);
     final mid = (n - 1) / 2;
     final stagger = AppMotion.gridRebirthStagger;
     final poses = <GridCellPose>[];
@@ -117,8 +130,8 @@ abstract final class GridRebirthMath {
         final local = span <= 0 ? 1.0 : ((u - delay) / span).clamp(0.0, 1.0);
         final s = local * local * (3 - 2 * local);
 
-        final targetX = col * (cell + gap);
-        final targetY = row * (cell + gap);
+        final targetX = _xFor(col, n, cell, board, gap, tileShape);
+        final targetY = _yFor(row, col, n, cell, board, gap, tileShape);
         // Merkeze yakın doğup slotuna kayar = hizalanma.
         final drift = (1 - s) * cell * AppMotion.gridRebirthAlign;
 
@@ -140,6 +153,43 @@ abstract final class GridRebirthMath {
       }
     }
     return poses;
+  }
+
+  static double _hexCellSize(int n, double board) {
+    final widthFactor = 1 + 0.75 * (n - 1);
+    final heightFactor = n + 0.5;
+    return board / (widthFactor > heightFactor ? widthFactor : heightFactor);
+  }
+
+  static double _xFor(
+    int col,
+    int n,
+    double cell,
+    double board,
+    double gap,
+    TileShape tileShape,
+  ) {
+    if (tileShape != TileShape.hexagon) {
+      return col * (cell + gap);
+    }
+    final layoutWidth = cell * (1 + 0.75 * (n - 1));
+    return (board - layoutWidth) / 2 + col * cell * 0.75;
+  }
+
+  static double _yFor(
+    int row,
+    int col,
+    int n,
+    double cell,
+    double board,
+    double gap,
+    TileShape tileShape,
+  ) {
+    if (tileShape != TileShape.hexagon) {
+      return row * (cell + gap);
+    }
+    final layoutHeight = cell * (n + 0.5);
+    return (board - layoutHeight) / 2 + row * cell + (col.isOdd ? cell / 2 : 0);
   }
 }
 
